@@ -177,9 +177,7 @@ enum PlayerEventError : LocalizedError {
         if let wv = self.webView {
             wv.isHidden = true
             self.showCover = options.showCover
-            if (options.params["autoplay"] == "true") {
-                self.willAutoplay = true
-            }
+            self.willAutoplay = options.params["autoplay"] == "true"
             self.customCover = nil
             if (self.showCover) {
                 self.customCover = options.customCover
