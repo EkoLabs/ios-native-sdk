@@ -18,5 +18,6 @@ public class EkoOptions {
     public var events : [String] = []
     public var showCover : Bool = true
     public var customCover : UIView? = nil
+    public var environment : String? = nil
 }
 

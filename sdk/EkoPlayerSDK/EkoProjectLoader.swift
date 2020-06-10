@@ -24,8 +24,9 @@ enum LoadingError : LocalizedError {
 class EkoProjectLoader: NSObject {
     private var projectId: String
     private var urlParam: String = ""
-    private let projectIDEndpoint : String = "https://sdks.eko.com/api/v1/projects/"
+    private let projectIDEndpoint : String = "/api/v1/projects/"
     private var defaultEvents = ["eko.urls.openinparent"]
+    private var env : String = ""
     init(projectId: String, options: EkoOptions) {
         self.projectId = projectId
         for (key, value) in options.params {
@@ -41,6 +42,9 @@ class EkoProjectLoader: NSObject {
         options.events += defaultEvents
         let eventList = options.events.joined(separator: ",")
         urlParam = "\(urlParam)&events=\(eventList)"
+        if let environment = options.environment {
+            env = "\(environment)."
+        }
     }
     
     func parseForError(json: NSDictionary) -> String? {
@@ -74,7 +78,7 @@ class EkoProjectLoader: NSObject {
     
     func getProjectEmbedURL(completionHandler: @escaping (String, Dictionary<String, AnyObject>?) -> Swift.Void, errorHandler: @escaping (Error?) -> Swift.Void) {
         // build the url out of the endpoint and the passed in project id
-        let urlString = projectIDEndpoint + self.projectId
+        let urlString = "https://\(env)eko.com" + projectIDEndpoint + self.projectId
         if let balooUrl = URL(string: urlString) {
             
             // create the request

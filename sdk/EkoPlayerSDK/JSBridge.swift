@@ -32,12 +32,10 @@ class JSBridge : NSObject {
         }
         if let argString = String(data: data, encoding: .utf8) {
             return """
-            if (typeof window.postMessage !== undefined) {
-                window.postMessage( {
-                    type: '\(method)',
-                    args: \(argString)
-                }, '*');
-            }
+            window.postMessage( {
+                type: '\(method)',
+                args: \(argString)
+            }, '*');
             """
         }
         return nil

@@ -87,6 +87,7 @@ class EkoPlayerSDKTests: XCTestCase {
     
     func testValidProjectId() {
         let options = EkoOptions()
+        options.environment = "sdks"
         let loader = EkoProjectLoader(projectId: "AWLLK1", options: options)
         let testExp = expectation(description: "EkoProjectLoader build the url with the project id and runs the callback closure")
 
@@ -111,6 +112,7 @@ class EkoPlayerSDKTests: XCTestCase {
         let options = EkoOptions()
         options.params["autoplay"] = "true"
         options.params["debug"] = "true"
+        options.environment = "sdks"
         let loader = EkoProjectLoader(projectId: "AWLLK1", options: options)
         let testExp = expectation(description: "EkoProjectLoader build the url with the project id and runs the callback closure")
         // 2. Exercise the asynchronous code

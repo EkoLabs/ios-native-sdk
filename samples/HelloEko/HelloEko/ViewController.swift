@@ -23,7 +23,8 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate {
     @IBOutlet weak var paramField: UITextField!
     @IBOutlet weak var playerView: EkoPlayerView!
     @IBOutlet weak var eventLog: UITextView!
-
+    @IBOutlet weak var envField: UITextField!
+    
     @IBAction func onLoadClicked(_ sender: Any) {
         let projectId = projectIdField.text
         let ekoConfig = EkoOptions()
@@ -43,6 +44,9 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate {
                 ekoConfig.params[key] = val
             }
         }
+        if (envField.text! != "") {
+            ekoConfig.environment = envField.text!
+        }
         playerView?.load(projectId: projectId!, options: ekoConfig)
     }
     @IBAction func onPlayClicked(_ sender: Any) {
@@ -61,7 +65,15 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate {
 
     func onEvent(event: String, args: [Any]?) {
         DispatchQueue.main.async {
-            self.eventLog.text = "\(self.eventLog.text ?? "")\n received event: \(event)"
+            if let data = args {
+                var str = ""
+                for ele in data {
+                    str = "\(str), \(ele)"
+                }
+                self.eventLog.text = "\(self.eventLog.text ?? "")\n received event: \(event) with args: \(str)"
+            } else {
+                self.eventLog.text = "\(self.eventLog.text ?? "")\n received event: \(event)"
+            }
         }
     }
     
