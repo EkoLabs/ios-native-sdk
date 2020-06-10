@@ -65,7 +65,7 @@ There can be link outs from within an eko video. This function will be called wh
 
 ## EkoOptions
 ### Properties
-#### params: Map<String, String> = { “autoplay”: true }
+#### params: Map<String, String> = { “autoplay”: "true" }
 A list of embed params that will affect the delivery.
 #### events: String[] = []
 A list of events that should be forwarded to the app
