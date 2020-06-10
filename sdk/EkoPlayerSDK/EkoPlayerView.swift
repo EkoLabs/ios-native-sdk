@@ -192,7 +192,9 @@ enum PlayerEventError : LocalizedError {
                     completionHandler: onProjectEmbedLoaded,
                     errorHandler: onProjectEmbedFailed)
             } else {
-                self.setCustomUserAgent(completionHandler: onUserAgentGenerated, errorHandler: onUserAgentError)
+                if (self.appName == "") {
+                    self.setCustomUserAgent(completionHandler: onUserAgentGenerated, errorHandler: onUserAgentError)
+                }
                 self.projectLoadQueue.append(projectLoader)
             }
         }
