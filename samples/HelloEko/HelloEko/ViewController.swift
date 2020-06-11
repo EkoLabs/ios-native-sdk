@@ -13,7 +13,7 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate {
 
     var portraitBounds : CGRect?
     let loadingView : UIView = UIView()
-    
+    let playerView : EkoPlayerView = EkoPlayerView()
     @IBOutlet weak var eventsField: UITextField!
     @IBOutlet weak var projectIdField: UITextField!
     @IBOutlet weak var loadBtn: UIButton!
@@ -21,7 +21,6 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate {
     @IBOutlet weak var pauseBtn: UIButton!
     @IBOutlet weak var customCoverOn: UISwitch!
     @IBOutlet weak var paramField: UITextField!
-    @IBOutlet weak var playerView: EkoPlayerView!
     @IBOutlet weak var eventLog: UITextView!
     @IBOutlet weak var envField: UITextField!
     
@@ -47,13 +46,13 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate {
         if (envField.text! != "") {
             ekoConfig.environment = envField.text!
         }
-        playerView?.load(projectId: projectId!, options: ekoConfig)
+        playerView.load(projectId: projectId!, options: ekoConfig)
     }
     @IBAction func onPlayClicked(_ sender: Any) {
-        playerView?.play()
+        playerView.play()
     }
     @IBAction func onPauseClicked(_ sender: Any) {
-        playerView?.pause()
+        playerView.pause()
     }
     
     func onError(error: Error) {
@@ -90,6 +89,8 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         loadingView.backgroundColor = UIColor.blue
+        self.view.addSubview(playerView)
+        playerView.frame = CGRect(x: 20, y: 369, width: 374, height: 260)
         playerView.delegate = self
         playerView.urlDelegate = self
         playerView.appName = "SampleApp"

@@ -60,11 +60,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nIJ-2M-1zL" customClass="EkoPlayerView" customModule="EkoPlayerSDK">
-                                <rect key="frame" x="20" y="369" width="374" height="260"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                            </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="b7O-e1-zhL">
                                 <rect key="frame" x="20" y="637" width="374" height="239"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -100,7 +95,6 @@
                         <outlet property="paramField" destination="VOT-Ei-Z71" id="OiF-wa-jQw"/>
                         <outlet property="pauseBtn" destination="KyT-IG-qI0" id="aTT-bt-Xb6"/>
                         <outlet property="playBtn" destination="gUY-b1-QfV" id="R5O-nu-Sre"/>
-                        <outlet property="playerView" destination="nIJ-2M-1zL" id="LxT-0g-taC"/>
                         <outlet property="projectIdField" destination="DuP-g0-eMq" id="Kvg-4W-8Ip"/>
                     </connections>
                 </viewController>
