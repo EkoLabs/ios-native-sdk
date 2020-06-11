@@ -80,3 +80,6 @@ Triggered when the player has buffered enough media to begin playback. Only adde
 #### eko.playing
 Only added if `showCover=true` and `autoplay=true`
 
+# Additional Notes
+Please note this is a static framework. If you would like to use the dynamic version, please download the repo, and change `MACH_O_TYPE` to  `dynamiclib` and rebuild. The storyboard compatibility is only available with the dynamic framework.
+
