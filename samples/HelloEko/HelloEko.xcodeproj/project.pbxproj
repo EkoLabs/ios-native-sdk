@@ -13,8 +13,8 @@
 		5AB8DB2024901D4A00345D05 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AB8DB1E24901D4A00345D05 /* Main.storyboard */; };
 		5AB8DB2224901D4A00345D05 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5AB8DB2124901D4A00345D05 /* Assets.xcassets */; };
 		5AB8DB2524901D4A00345D05 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AB8DB2324901D4A00345D05 /* LaunchScreen.storyboard */; };
-		5AB8DB3624901DF900345D05 /* EkoPlayerSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AB8DB3224901DD900345D05 /* EkoPlayerSDK.framework */; };
-		5AB8DB3724901DF900345D05 /* EkoPlayerSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5AB8DB3224901DD900345D05 /* EkoPlayerSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5AB8E49724929C0C008AB169 /* EkoPlayerSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AB8DB3224901DD900345D05 /* EkoPlayerSDK.framework */; };
+		5AB8E49824929C0C008AB169 /* EkoPlayerSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5AB8DB3224901DD900345D05 /* EkoPlayerSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,13 +35,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		5AB8DB3824901DF900345D05 /* Embed Frameworks */ = {
+		5AB8E49924929C0C008AB169 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5AB8DB3724901DF900345D05 /* EkoPlayerSDK.framework in Embed Frameworks */,
+				5AB8E49824929C0C008AB169 /* EkoPlayerSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -65,7 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5AB8DB3624901DF900345D05 /* EkoPlayerSDK.framework in Frameworks */,
+				5AB8E49724929C0C008AB169 /* EkoPlayerSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,7 +130,7 @@
 				5AB8DB1124901D4A00345D05 /* Sources */,
 				5AB8DB1224901D4A00345D05 /* Frameworks */,
 				5AB8DB1324901D4A00345D05 /* Resources */,
-				5AB8DB3824901DF900345D05 /* Embed Frameworks */,
+				5AB8E49924929C0C008AB169 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
