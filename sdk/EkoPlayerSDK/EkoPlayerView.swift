@@ -1,9 +1,9 @@
 //
 //  EkoPlayerView.swift
-//  ekoSampleApp
+//  EkoPlayerSDK
 //
 //  Created by Divya on 3/2/20.
-//  Copyright © 2020 Divya. All rights reserved.
+//  Copyright © 2020 eko. All rights reserved.
 //
 
 import UIKit
