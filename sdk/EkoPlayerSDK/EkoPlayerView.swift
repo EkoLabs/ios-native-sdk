@@ -96,11 +96,11 @@ enum PlayerEventError : LocalizedError {
     func setCustomUserAgent(completionHandler: @escaping (String) -> Swift.Void, errorHandler: @escaping (Error?) -> Swift.Void) {
         if let wv = self.webView {
             if (wv.customUserAgent == "") {
-                let appName: String?;
-                if (self.appName != "") {
-                    appName = self.appName;
+                let aName: String?;
+                if (self.appName != nil) {
+                    aName = self.appName;
                 } else {
-                    appName = Bundle.main.bundleIdentifier;
+                    aName = Bundle.main.bundleIdentifier;
                 }
                 
                 let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
@@ -121,7 +121,7 @@ enum PlayerEventError : LocalizedError {
                     } else {
                         // Otherwise, get the current user agent as a string
                         let userAgent = result as? String
-                        if let ua = userAgent, let name = appName, let app = appVersion, let sdk = sdkVersion {
+                        if let ua = userAgent, let name = aName, let app = appVersion, let sdk = sdkVersion {
                             // Create the custom user agent and assign it
                             let customUA = "\(ua) - ekoNativeSDK/\(sdk) - \(name)/\(app)"
                             completionHandler(customUA)
@@ -192,7 +192,7 @@ enum PlayerEventError : LocalizedError {
                     completionHandler: onProjectEmbedLoaded,
                     errorHandler: onProjectEmbedFailed)
             } else {
-                if (self.appName == "") {
+                if (self.appName == nil) {
                     self.setCustomUserAgent(completionHandler: onUserAgentGenerated, errorHandler: onUserAgentError)
                 }
                 self.projectLoadQueue.append(projectLoader)
