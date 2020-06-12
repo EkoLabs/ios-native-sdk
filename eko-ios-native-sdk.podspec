@@ -16,13 +16,15 @@ Pod::Spec.new do |s|
                    DESC
 
   s.homepage     = "https://github.com/EkoLabs/ios-native-sdk"
-  s.license      = { :type => 'Apache', :file => 'LICENSE' }
+  s.license      = { :type => "Apache", :file => "LICENSE" }
   s.author             = { "Divya Mahadevan" => "divya@eko.com" }
 
   s.swift_version = "5.1"
   s.ios.deployment_target = "11.0"
 
-  s.source       = { :git => "https://github.com/EkoLabs/ios-native-sdk.git", :tag => s.version.to_s }
-  s.source_files  = "sdk/EkoPlayerSDK/*.{h,m, swift}"
+  s.source       = { :git => "https://github.com/EkoLabs/ios-native-sdk.git", :tag => "#{s.version}" }
+  s.source_files  = "sdk/EkoPlayerSDK/*.{h,m,swift}"
+  s.framework = "UIKit"
+  s.module_name = "EkoPlayerSDK"
 
 end

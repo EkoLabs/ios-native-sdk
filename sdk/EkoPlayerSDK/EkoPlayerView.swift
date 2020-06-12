@@ -187,7 +187,7 @@ enum PlayerEventError : LocalizedError {
             // Making an assumption here that we don't want to load the project
             // until we set the user agent
             let projectLoader = EkoProjectLoader(projectId: projectId, options: options)
-            if (wv.customUserAgent != "") {
+            if (wv.customUserAgent == nil) {
                 projectLoader.getProjectEmbedURL(
                     completionHandler: onProjectEmbedLoaded,
                     errorHandler: onProjectEmbedFailed)
