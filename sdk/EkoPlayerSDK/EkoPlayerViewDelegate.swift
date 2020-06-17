@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol EkoPlayerViewDelegate {
+public protocol EkoPlayerViewDelegate: AnyObject {
 
     // This function will be called whenever a specified event is triggered
     // within the player. The list of events can be found on the eko dev site.

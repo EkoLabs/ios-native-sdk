@@ -22,8 +22,8 @@ enum PlayerEventError : LocalizedError {
 
 @IBDesignable public class EkoPlayerView: UIView, WKScriptMessageHandler, WKNavigationDelegate {
 
-    public var delegate : EkoPlayerViewDelegate?
-    public var urlDelegate : EkoUrlDelegate?
+    public weak var delegate : EkoPlayerViewDelegate?
+    public weak var urlDelegate : EkoUrlDelegate?
     public var appName : String? {
         didSet {
             setCustomUserAgent(completionHandler: onUserAgentGenerated, errorHandler: onUserAgentError)
@@ -141,6 +141,7 @@ enum PlayerEventError : LocalizedError {
                     completionHandler: onProjectEmbedLoaded,
                     errorHandler: onProjectEmbedFailed)
             }
+            self.projectLoadQueue = []
         }
     }
     
@@ -159,6 +160,19 @@ enum PlayerEventError : LocalizedError {
             if let customLoader = self.customCover {
                 customLoader.frame = self.bounds
             }
+        }
+    }
+
+    public override func willMove(toSuperview newSuperview: UIView?) {
+        super.willMove(toSuperview: newSuperview)
+        if (newSuperview == nil) {
+            // clean up webview delegates. Delegates and script message handlers are
+            // strong references, so need to remove them otherwise memory leak will occur
+            self.webView?.uiDelegate = nil
+            self.webView?.navigationDelegate = nil
+            self.webView?.configuration.userContentController.removeAllUserScripts()
+            self.webView?.configuration.userContentController.removeScriptMessageHandler(forName: eventHandlerName)
+            self.webView = nil
         }
     }
 
@@ -187,7 +201,7 @@ enum PlayerEventError : LocalizedError {
             // Making an assumption here that we don't want to load the project
             // until we set the user agent
             let projectLoader = EkoProjectLoader(projectId: projectId, options: options)
-            if (wv.customUserAgent == nil) {
+            if (wv.customUserAgent != nil) {
                 projectLoader.getProjectEmbedURL(
                     completionHandler: onProjectEmbedLoaded,
                     errorHandler: onProjectEmbedFailed)
