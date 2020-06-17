@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol EkoUrlDelegate {
+public protocol EkoUrlDelegate: AnyObject {
 
     // This function will be called whenever a url must be opened
     func onUrlOpen(url: String)
