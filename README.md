@@ -10,7 +10,7 @@ See [EkoPlayerViewDelegate](#ekoplayerviewdelegate) for more information
 #### urlDelegate: EkoUrlDelegate
 See [EkoUrlDelegate](#ekourldelegate) for more information
 #### appName: String
-App name is for analytics purposes. Will default to the bundle id if not set.
+App name is for analytics purposes. Will default to the bundle id if not set. Warning: setting this property will reset the entire webview.
 ### Methods
 #### init()
 The EkoPlayerView can be initialized programmatically or included via storyboard.
