@@ -9,8 +9,8 @@
 import UIKit
 import EkoPlayerSDK
 
-class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate {
-
+class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate, EkoShareDelegate {
+    
     var portraitBounds : CGRect?
     let loadingView : UIView = UIView()
     let playerView : EkoPlayerView = EkoPlayerView()
@@ -55,6 +55,22 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate {
         playerView.pause()
     }
     
+    @IBAction func handleUrlsValueChanged(_ sender: Any) {
+        if ((sender as! UISwitch).isOn) {
+            playerView.urlDelegate = self
+        } else {
+            playerView.urlDelegate = nil
+        }
+    }
+    
+    @IBAction func handleShareValueChanges(_ sender: Any) {
+        if ((sender as! UISwitch).isOn) {
+            playerView.shareDelegate = self
+        } else {
+            playerView.shareDelegate = nil
+        }
+    }
+    
     func onError(error: Error) {
         print(error)
         DispatchQueue.main.async {
@@ -77,12 +93,11 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate {
     }
     
     func onUrlOpen(url: String) {
-        if let urlObj = URL(string: url) {
-            DispatchQueue.main.async {
-                self.eventLog.text = "\(self.eventLog.text ?? "")\n received url open event for url: \(url)"
-                UIApplication.shared.open(urlObj)
-            }
-        }
+        self.eventLog.text = "\(self.eventLog.text ?? "")\n received url open event for url: \(url)"
+    }
+    
+    func onShare(url: String) {
+        self.eventLog.text = "\(self.eventLog.text ?? "")\n received share intent for url: \(url)"
     }
     
     override func viewDidLoad() {

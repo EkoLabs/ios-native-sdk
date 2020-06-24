@@ -24,6 +24,7 @@ enum PlayerEventError : LocalizedError {
 
     public weak var delegate : EkoPlayerViewDelegate?
     public weak var urlDelegate : EkoUrlDelegate?
+    public weak var shareDelegate : EkoShareDelegate?
     public var appName : String? {
         didSet {
             setCustomUserAgent(completionHandler: onUserAgentGenerated, errorHandler: onUserAgentError)
@@ -278,6 +279,17 @@ enum PlayerEventError : LocalizedError {
         }
     }
     
+    func getParentUIViewController() -> UIViewController? {
+        var parentResponder: UIResponder? = self
+        while parentResponder != nil {
+            parentResponder = parentResponder!.next
+            if let viewController = parentResponder as? UIViewController {
+                return viewController
+            }
+        }
+        return nil
+    }
+    
     // MARK: Delegate functions
     // WKNavigationDelegate function
     public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
@@ -309,12 +321,12 @@ enum PlayerEventError : LocalizedError {
                 if let args = json["args"] as? Array<AnyObject> {
                     if !args.isEmpty, let urlString = args[0]["url"] as? String {
                          if let escapedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-                            if let urlOpener = self.urlDelegate {
-                                urlOpener.onUrlOpen(url: escapedString)
-                            } else {
-                                if let urlObj = URL(string: escapedString) {
-                                    DispatchQueue.main.async {
-                                        UIApplication.shared.open(urlObj)
+                            DispatchQueue.main.async {
+                                if let urlOpener = self.urlDelegate {
+                                    urlOpener.onUrlOpen(url: escapedString)
+                                } else {
+                                    if let urlObj = URL(string: escapedString) {
+                                            UIApplication.shared.open(urlObj)
                                     }
                                 }
                             }
@@ -326,6 +338,30 @@ enum PlayerEventError : LocalizedError {
                     }
                 } else {
                     let urlError = PlayerEventError.malformedEventData(message: "Received malformed urls open data. Missing args.")
+                    self.delegate?.onError(error: urlError)
+                }
+            } else if (eventName == "eko.share.intent") {
+                if let args = json["args"] as? Array<AnyObject> {
+                    if !args.isEmpty, let urlString = args[0]["url"] as? String {
+                         if let escapedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                            DispatchQueue.main.async {
+                                if let shareOpener = self.shareDelegate {
+                                    shareOpener.onShare(url: escapedString)
+                                } else {
+                                    if let urlObj = URL(string: escapedString) {
+                                        let activity = UIActivityViewController(activityItems: [urlObj], applicationActivities: nil)
+                                        self.getParentUIViewController()?.present(activity, animated: true, completion: nil)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        let urlError = PlayerEventError.malformedEventData(message: "Received malformed share data. Missing url.")
+                        self.delegate?.onError(error: urlError)
+                    }
+                } else {
+                    let urlError = PlayerEventError.malformedEventData(message: "Received malformed share data. Missing args.")
                     self.delegate?.onError(error: urlError)
                 }
             } else {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5694974A24A2193A005F8D04 /* EkoShareDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5694974924A2193A005F8D04 /* EkoShareDelegate.swift */; };
 		5A54D976241BE505005D7F9D /* EkoProjectLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A54D975241BE505005D7F9D /* EkoProjectLoader.swift */; };
 		5A6924C6240DB62500DED623 /* EkoPlayerSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A6924BC240DB62500DED623 /* EkoPlayerSDK.framework */; };
 		5A6924CB240DB62500DED623 /* EkoPlayerSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6924CA240DB62500DED623 /* EkoPlayerSDKTests.swift */; };
@@ -31,6 +32,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5694974924A2193A005F8D04 /* EkoShareDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EkoShareDelegate.swift; sourceTree = "<group>"; };
 		5A54D975241BE505005D7F9D /* EkoProjectLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EkoProjectLoader.swift; sourceTree = "<group>"; };
 		5A6924BC240DB62500DED623 /* EkoPlayerSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EkoPlayerSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A6924BF240DB62500DED623 /* EkoPlayerSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EkoPlayerSDK.h; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 				5A54D975241BE505005D7F9D /* EkoProjectLoader.swift */,
 				5AB8DAE2248958D600345D05 /* EkoOptions.swift */,
 				5AB8DAE8248EB02600345D05 /* JSBridge.swift */,
+				5694974924A2193A005F8D04 /* EkoShareDelegate.swift */,
 			);
 			path = EkoPlayerSDK;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 				5AB8DAE3248958D600345D05 /* EkoOptions.swift in Sources */,
 				5AB8DAE524895AD500345D05 /* EkoUrlDelegate.swift in Sources */,
 				5A54D976241BE505005D7F9D /* EkoProjectLoader.swift in Sources */,
+				5694974A24A2193A005F8D04 /* EkoShareDelegate.swift in Sources */,
 				5A6924DB240DB6D000DED623 /* EkoPlayerViewDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
