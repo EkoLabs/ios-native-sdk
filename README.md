@@ -68,7 +68,7 @@ There can be link outs from within an eko project. This function will be called 
 | url | `String` | The url to open. |
 
 ## EkoShareDelegate
-Delegate for share events.
+Delegate for share intents.
 ### Methods
 #### onShare(url: String)
 There can be share intents from within an eko project via share buttons or ekoshell. This function will be called whenever a share intent happened.
