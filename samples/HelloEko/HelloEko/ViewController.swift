@@ -28,13 +28,13 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate, E
     @IBAction func onLoadClicked(_ sender: Any) {
         clearDataBtn.isEnabled = false
         let projectId = projectIdField.text
-        let ekoConfig = EkoOptions()
+        let ekoOptions = EkoOptions()
         if (eventsField.text! != "") {
             let customEvents = eventsField.text!.replacingOccurrences(of: " ", with: "").components(separatedBy: ",")
-            ekoConfig.events = customEvents
+            ekoOptions.events = customEvents
         }
         if (customCoverOn.isOn) {
-            ekoConfig.customCover = loadingView
+            ekoOptions.cover = CustomCover.self
         }
         if (paramField.text! != "") {
             let params = paramField.text!.replacingOccurrences(of: " ", with: "").components(separatedBy: ",")
@@ -42,13 +42,13 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate, E
                 let keyValPair = p.split(separator: "=")
                 let key = String(keyValPair[0])
                 let val = String(keyValPair[1])
-                ekoConfig.params[key] = val
+                ekoOptions.params[key] = val
             }
         }
         if (envField.text! != "") {
-            ekoConfig.environment = envField.text!
+            ekoOptions.environment = envField.text!
         }
-        playerView.load(projectId: projectId!, options: ekoConfig)
+        playerView.load(projectId: projectId!, options: ekoOptions)
     }
     @IBAction func onPlayClicked(_ sender: Any) {
         playerView.play()

@@ -31,7 +31,7 @@ class EkoProjectLoader: NSObject {
         for (key, value) in options.params {
             urlParam = "\(urlParam)&\(key)=\(value)"
         }
-        if (options.showCover) {
+        if (options.cover != nil) {
             if (options.params["autoplay"] == "true") {
                 if (!options.events.contains("eko.playing")) {
                     options.events.append("eko.playing")

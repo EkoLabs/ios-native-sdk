@@ -16,8 +16,7 @@ public class EkoOptions {
     }
     public var params : Dictionary<String, String> = ["autoplay": "true"]
     public var events : [String] = []
-    public var showCover : Bool = true
-    public var customCover : UIView? = nil
+    public var cover : UIView.Type? = EkoDefaultCover.self
     public var environment : String? = nil
 }
 

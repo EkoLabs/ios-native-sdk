@@ -32,13 +32,11 @@ enum PlayerEventError : LocalizedError {
     }
     private var webView : WKWebView?
     private var fakeWebView : WKWebView?
-    private let spinner : UIActivityIndicatorView = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.whiteLarge)
     private var projectLoadQueue : [EkoProjectLoader] = []
     private let eventHandlerName = "nativeSdk"
     private var isLoaded = false
     private var willAutoplay = false
-    private var showCover : Bool = true
-    private var customCover : UIView?
+    private var cover : UIView?
     private var readyEvent : String = "eko.canplay"
     private var playingEvent : String = "eko.playing"
     
@@ -67,7 +65,6 @@ enum PlayerEventError : LocalizedError {
     
     func commonInit() {
         self.backgroundColor = UIColor.black
-        spinner.color = UIColor.white
         initializeWebView()
         if #available(iOS 13.0, *) {
             NotificationCenter.default.addObserver(self, selector: #selector(willResignActive), name: UIScene.willDeactivateNotification, object: nil)
@@ -166,12 +163,6 @@ enum PlayerEventError : LocalizedError {
     public override func layoutSubviews() {
         super.layoutSubviews()
         self.webView?.frame = self.bounds
-        if (self.showCover) {
-            spinner.frame = self.bounds
-            if let customLoader = self.customCover {
-                customLoader.frame = self.bounds
-            }
-        }
     }
 
     public override func willMove(toSuperview newSuperview: UIView?) {
@@ -201,12 +192,9 @@ enum PlayerEventError : LocalizedError {
         
         if let wv = self.webView {
             wv.isHidden = true
-            self.showCover = options.showCover
             self.willAutoplay = options.params["autoplay"] == "true"
-            self.customCover = nil
-            if (self.showCover) {
-                self.customCover = options.customCover
-                self.addCover()
+            if (options.cover != nil) {
+                self.addCover(cover: options.cover!)
             }
             
             // Making an assumption here that we don't want to load the project
@@ -247,25 +235,13 @@ enum PlayerEventError : LocalizedError {
         }
     }
 
-    func addCover() {
-        if let customLoader = self.customCover {
-            self.addSubview(customLoader)
-            customLoader.frame = self.bounds
-        } else {
-            self.addSubview(spinner)
-            spinner.startAnimating()
-        }
+    func addCover(cover: UIView.Type) {
+        self.cover = cover.init(frame: self.bounds)
+        self.addSubview(self.cover!)
     }
     
     func removeCover() {
-        if (self.showCover) {
-            if let customLoader = self.customCover {
-                customLoader.removeFromSuperview()
-            } else {
-                spinner.stopAnimating()
-                spinner.removeFromSuperview()
-            }
-        }
+        self.cover?.removeFromSuperview()
     }
     
     func onProjectEmbedLoaded(projectEmbedUrl: String, projectMetadata: Dictionary<String, AnyObject>?) {
