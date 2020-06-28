@@ -4,6 +4,11 @@ A lightweight SDK that allows for easy integration of eko projects into an iOS a
 # API
 ## EkoPlayerView
 This is the view in which the eko player will reside. It will also forward any events from the player to the rest of the app.
+### Static
+#### EkoPlayerView.clearData()
+Clears all the all EkoPlayerView's Webview data, including: cache, cookies and javasctript storage.
+NOTE: Since Webview data in iOS is shared at the app level, calling this method
+will clear the data for all of the app's Webviews.
 ### Properties
 #### delegate : EkoPlayerViewDelegate
 See [EkoPlayerViewDelegate](#ekoplayerviewdelegate) for more information
