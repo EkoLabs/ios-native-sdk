@@ -110,11 +110,20 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="32d-1Q-AnR">
+                                <rect key="frame" x="285" y="245" width="72" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Clear Data"/>
+                                <connections>
+                                    <action selector="onClearDataClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="X3I-10-rhG"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="clearDataBtn" destination="32d-1Q-AnR" id="8Gg-Lb-P3m"/>
                         <outlet property="customCoverOn" destination="Iey-PS-dS4" id="Ch3-kp-W4s"/>
                         <outlet property="envField" destination="dFs-13-G5b" id="IVZ-wS-rQj"/>
                         <outlet property="eventLog" destination="b7O-e1-zhL" id="lho-6f-d8o"/>

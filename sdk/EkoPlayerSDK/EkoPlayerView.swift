@@ -41,6 +41,16 @@ enum PlayerEventError : LocalizedError {
     private var customCover : UIView?
     private var readyEvent : String = "eko.canplay"
     private var playingEvent : String = "eko.playing"
+    
+    public class func clearData() {
+        URLCache.shared.removeAllCachedResponses()
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+           records.forEach { record in
+               WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+           }
+        }
+    }
 
     // MARK: init code
     public override init(frame: CGRect) {

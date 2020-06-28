@@ -23,8 +23,10 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate, E
     @IBOutlet weak var paramField: UITextField!
     @IBOutlet weak var eventLog: UITextView!
     @IBOutlet weak var envField: UITextField!
+    @IBOutlet weak var clearDataBtn: UIButton!
     
     @IBAction func onLoadClicked(_ sender: Any) {
+        clearDataBtn.isEnabled = false
         let projectId = projectIdField.text
         let ekoConfig = EkoOptions()
         if (eventsField.text! != "") {
@@ -69,6 +71,10 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate, E
         } else {
             playerView.shareDelegate = nil
         }
+    }
+    
+    @IBAction func onClearDataClicked(_ sender: Any) {
+        EkoPlayerView.clearData()
     }
     
     func onError(error: Error) {
