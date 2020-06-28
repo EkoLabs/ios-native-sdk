@@ -90,6 +90,7 @@ A list of embed params that will affect the delivery.
 A list of events that should be forwarded to the app
 #### cover: UIView.Type? = EkoDefaultCover.self
 A UIView to cover the loading of the eko project. Set to `nil` to disable.
+Will be initialized by the EkoPlayerView.
 
 # Default Player Events
 #### eko.canplay
