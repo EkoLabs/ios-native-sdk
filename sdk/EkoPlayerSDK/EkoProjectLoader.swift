@@ -25,21 +25,27 @@ class EkoProjectLoader: NSObject {
     private var projectId: String
     private var urlParam: String = ""
     private let projectIDEndpoint : String = "/api/v1/projects/"
-    private var defaultEvents = ["eko.urls.openinparent"]
     private var env : String = ""
     init(projectId: String, options: EkoOptions) {
         self.projectId = projectId
         for (key, value) in options.params {
             urlParam = "\(urlParam)&\(key)=\(value)"
         }
-        if (options.showCover) {
+        if (options.cover != nil) {
             if (options.params["autoplay"] == "true") {
-                defaultEvents.append("eko.playing")
-            } else {
-                defaultEvents.append("eko.canplay")
+                if (!options.events.contains("eko.playing")) {
+                    options.events.append("eko.playing")
+                }
+            } else if (!options.events.contains("eko.canplay")) {
+                options.events.append("eko.canplay")
             }
         }
-        options.events += defaultEvents
+        if (!options.events.contains("urls.openinparent")) {
+            options.events.append("urls.openinparent")
+        }
+        if (!options.events.contains("share.intent")) {
+            options.events.append("share.intent")
+        }
         let eventList = options.events.joined(separator: ",")
         urlParam = "\(urlParam)&events=\(eventList)"
         if let environment = options.environment {
@@ -67,7 +73,7 @@ class EkoProjectLoader: NSObject {
             } else {
                 // attempt to get the embed url from the response, throw an error if unable to
                 if let projectEmbed = data["embedUrl"] as? String {
-                    totalUrl = "\(projectEmbed)?embedapi=1.0\(urlParam)"
+                    totalUrl = "\(projectEmbed)?embedapi=1.0&sharemode=proxy\(urlParam)"
                 } else {
                     throw LoadingError.malformedResponse(message: "Embed url not found - Missing embed url in response")
                 }

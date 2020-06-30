@@ -9,8 +9,8 @@
 import UIKit
 import EkoPlayerSDK
 
-class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate {
-
+class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate, EkoShareDelegate {
+    
     var portraitBounds : CGRect?
     let loadingView : UIView = UIView()
     let playerView : EkoPlayerView = EkoPlayerView()
@@ -23,16 +23,18 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate {
     @IBOutlet weak var paramField: UITextField!
     @IBOutlet weak var eventLog: UITextView!
     @IBOutlet weak var envField: UITextField!
+    @IBOutlet weak var clearDataBtn: UIButton!
     
     @IBAction func onLoadClicked(_ sender: Any) {
+        clearDataBtn.isEnabled = false
         let projectId = projectIdField.text
-        let ekoConfig = EkoOptions()
+        let ekoOptions = EkoOptions()
         if (eventsField.text! != "") {
             let customEvents = eventsField.text!.replacingOccurrences(of: " ", with: "").components(separatedBy: ",")
-            ekoConfig.events = customEvents
+            ekoOptions.events = customEvents
         }
         if (customCoverOn.isOn) {
-            ekoConfig.customCover = loadingView
+            ekoOptions.cover = CustomCover.self
         }
         if (paramField.text! != "") {
             let params = paramField.text!.replacingOccurrences(of: " ", with: "").components(separatedBy: ",")
@@ -40,19 +42,39 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate {
                 let keyValPair = p.split(separator: "=")
                 let key = String(keyValPair[0])
                 let val = String(keyValPair[1])
-                ekoConfig.params[key] = val
+                ekoOptions.params[key] = val
             }
         }
         if (envField.text! != "") {
-            ekoConfig.environment = envField.text!
+            ekoOptions.environment = envField.text!
         }
-        playerView.load(projectId: projectId!, options: ekoConfig)
+        playerView.load(projectId: projectId!, options: ekoOptions)
     }
     @IBAction func onPlayClicked(_ sender: Any) {
         playerView.play()
     }
     @IBAction func onPauseClicked(_ sender: Any) {
         playerView.pause()
+    }
+    
+    @IBAction func handleUrlsValueChanged(_ sender: Any) {
+        if ((sender as! UISwitch).isOn) {
+            playerView.urlDelegate = self
+        } else {
+            playerView.urlDelegate = nil
+        }
+    }
+    
+    @IBAction func handleShareValueChanges(_ sender: Any) {
+        if ((sender as! UISwitch).isOn) {
+            playerView.shareDelegate = self
+        } else {
+            playerView.shareDelegate = nil
+        }
+    }
+    
+    @IBAction func onClearDataClicked(_ sender: Any) {
+        EkoPlayerView.clearData()
     }
     
     func onError(error: Error) {
@@ -77,12 +99,11 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate {
     }
     
     func onUrlOpen(url: String) {
-        if let urlObj = URL(string: url) {
-            DispatchQueue.main.async {
-                self.eventLog.text = "\(self.eventLog.text ?? "")\n received url open event for url: \(url)"
-                UIApplication.shared.open(urlObj)
-            }
-        }
+        self.eventLog.text = "\(self.eventLog.text ?? "")\n received url open event for url: \(url)"
+    }
+    
+    func onShare(url: String) {
+        self.eventLog.text = "\(self.eventLog.text ?? "")\n received share intent for url: \(url)"
     }
     
     override func viewDidLoad() {

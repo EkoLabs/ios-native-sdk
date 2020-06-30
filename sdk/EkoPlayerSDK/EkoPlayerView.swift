@@ -24,6 +24,7 @@ enum PlayerEventError : LocalizedError {
 
     public weak var delegate : EkoPlayerViewDelegate?
     public weak var urlDelegate : EkoUrlDelegate?
+    public weak var shareDelegate : EkoShareDelegate?
     public var appName : String? {
         didSet {
             setCustomUserAgent(completionHandler: onUserAgentGenerated, errorHandler: onUserAgentError)
@@ -31,15 +32,23 @@ enum PlayerEventError : LocalizedError {
     }
     private var webView : WKWebView?
     private var fakeWebView : WKWebView?
-    private let spinner : UIActivityIndicatorView = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.whiteLarge)
     private var projectLoadQueue : [EkoProjectLoader] = []
     private let eventHandlerName = "nativeSdk"
     private var isLoaded = false
     private var willAutoplay = false
-    private var showCover : Bool = true
-    private var customCover : UIView?
+    private var cover : UIView?
     private var readyEvent : String = "eko.canplay"
     private var playingEvent : String = "eko.playing"
+    
+    public class func clearData() {
+        URLCache.shared.removeAllCachedResponses()
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+           records.forEach { record in
+               WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+           }
+        }
+    }
 
     // MARK: init code
     public override init(frame: CGRect) {
@@ -56,7 +65,6 @@ enum PlayerEventError : LocalizedError {
     
     func commonInit() {
         self.backgroundColor = UIColor.black
-        spinner.color = UIColor.white
         initializeWebView()
         if #available(iOS 13.0, *) {
             NotificationCenter.default.addObserver(self, selector: #selector(willResignActive), name: UIScene.willDeactivateNotification, object: nil)
@@ -155,12 +163,6 @@ enum PlayerEventError : LocalizedError {
     public override func layoutSubviews() {
         super.layoutSubviews()
         self.webView?.frame = self.bounds
-        if (self.showCover) {
-            spinner.frame = self.bounds
-            if let customLoader = self.customCover {
-                customLoader.frame = self.bounds
-            }
-        }
     }
 
     public override func willMove(toSuperview newSuperview: UIView?) {
@@ -190,12 +192,9 @@ enum PlayerEventError : LocalizedError {
         
         if let wv = self.webView {
             wv.isHidden = true
-            self.showCover = options.showCover
             self.willAutoplay = options.params["autoplay"] == "true"
-            self.customCover = nil
-            if (self.showCover) {
-                self.customCover = options.customCover
-                self.addCover()
+            if (options.cover != nil) {
+                self.addCover(cover: options.cover!)
             }
             
             // Making an assumption here that we don't want to load the project
@@ -236,25 +235,13 @@ enum PlayerEventError : LocalizedError {
         }
     }
 
-    func addCover() {
-        if let customLoader = self.customCover {
-            self.addSubview(customLoader)
-            customLoader.frame = self.bounds
-        } else {
-            self.addSubview(spinner)
-            spinner.startAnimating()
-        }
+    func addCover(cover: UIView.Type) {
+        self.cover = cover.init(frame: self.bounds)
+        self.addSubview(self.cover!)
     }
     
     func removeCover() {
-        if (self.showCover) {
-            if let customLoader = self.customCover {
-                customLoader.removeFromSuperview()
-            } else {
-                spinner.stopAnimating()
-                spinner.removeFromSuperview()
-            }
-        }
+        self.cover?.removeFromSuperview()
     }
     
     func onProjectEmbedLoaded(projectEmbedUrl: String, projectMetadata: Dictionary<String, AnyObject>?) {
@@ -276,6 +263,17 @@ enum PlayerEventError : LocalizedError {
         if let err = error {
             self.delegate?.onError(error: err)
         }
+    }
+    
+    func getParentUIViewController() -> UIViewController? {
+        var parentResponder: UIResponder? = self
+        while parentResponder != nil {
+            parentResponder = parentResponder!.next
+            if let viewController = parentResponder as? UIViewController {
+                return viewController
+            }
+        }
+        return nil
     }
     
     // MARK: Delegate functions
@@ -309,12 +307,12 @@ enum PlayerEventError : LocalizedError {
                 if let args = json["args"] as? Array<AnyObject> {
                     if !args.isEmpty, let urlString = args[0]["url"] as? String {
                          if let escapedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-                            if let urlOpener = self.urlDelegate {
-                                urlOpener.onUrlOpen(url: escapedString)
-                            } else {
-                                if let urlObj = URL(string: escapedString) {
-                                    DispatchQueue.main.async {
-                                        UIApplication.shared.open(urlObj)
+                            DispatchQueue.main.async {
+                                if let urlOpener = self.urlDelegate {
+                                    urlOpener.onUrlOpen(url: escapedString)
+                                } else {
+                                    if let urlObj = URL(string: escapedString) {
+                                            UIApplication.shared.open(urlObj)
                                     }
                                 }
                             }
@@ -326,6 +324,30 @@ enum PlayerEventError : LocalizedError {
                     }
                 } else {
                     let urlError = PlayerEventError.malformedEventData(message: "Received malformed urls open data. Missing args.")
+                    self.delegate?.onError(error: urlError)
+                }
+            } else if (eventName == "eko.share.intent") {
+                if let args = json["args"] as? Array<AnyObject> {
+                    if !args.isEmpty, let urlString = args[0]["url"] as? String {
+                         if let escapedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                            DispatchQueue.main.async {
+                                if let shareOpener = self.shareDelegate {
+                                    shareOpener.onShare(url: escapedString)
+                                } else {
+                                    if let urlObj = URL(string: escapedString) {
+                                        let activity = UIActivityViewController(activityItems: [urlObj], applicationActivities: nil)
+                                        self.getParentUIViewController()?.present(activity, animated: true, completion: nil)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        let urlError = PlayerEventError.malformedEventData(message: "Received malformed share data. Missing url.")
+                        self.delegate?.onError(error: urlError)
+                    }
+                } else {
+                    let urlError = PlayerEventError.malformedEventData(message: "Received malformed share data. Missing args.")
                     self.delegate?.onError(error: urlError)
                 }
             } else {
