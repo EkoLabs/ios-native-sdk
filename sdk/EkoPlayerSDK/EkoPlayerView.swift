@@ -303,7 +303,7 @@ enum PlayerEventError : LocalizedError {
             }
 
             // the URL might not be encoded, so encode it before passing it to the delegate
-            if (eventName == "eko.urls.openinparent") {
+            if (eventName == "eko.urls.intent") {
                 if let args = json["args"] as? Array<AnyObject> {
                     if !args.isEmpty, let urlString = args[0]["url"] as? String {
                          if let escapedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
