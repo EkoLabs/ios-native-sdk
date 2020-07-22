@@ -73,7 +73,7 @@ class EkoProjectLoader: NSObject {
             } else {
                 // attempt to get the embed url from the response, throw an error if unable to
                 if let projectEmbed = data["embedUrl"] as? String {
-                    totalUrl = "\(projectEmbed)?embedapi=1.0&sharemode=proxy&urlmode=proxy\(urlParam)"
+                    totalUrl = "\(projectEmbed)?embedapi=1.0&sharemode=proxy&urlsmode=proxy\(urlParam)"
                 } else {
                     throw LoadingError.malformedResponse(message: "Embed url not found - Missing embed url in response")
                 }
