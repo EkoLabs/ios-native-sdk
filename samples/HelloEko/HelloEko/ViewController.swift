@@ -113,7 +113,6 @@ class ViewController: UIViewController, EkoPlayerViewDelegate, EkoUrlDelegate, E
         self.view.addSubview(playerView)
         playerView.frame = CGRect(x: 20, y: 369, width: 374, height: 260)
         playerView.delegate = self
-        playerView.urlDelegate = self
         playerView.appName = "SampleApp"
     }
     

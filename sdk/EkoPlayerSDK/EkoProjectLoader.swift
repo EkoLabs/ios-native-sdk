@@ -40,8 +40,8 @@ class EkoProjectLoader: NSObject {
                 options.events.append("eko.canplay")
             }
         }
-        if (!options.events.contains("urls.openinparent")) {
-            options.events.append("urls.openinparent")
+        if (!options.events.contains("urls.intent")) {
+            options.events.append("urls.intent")
         }
         if (!options.events.contains("share.intent")) {
             options.events.append("share.intent")
@@ -73,7 +73,7 @@ class EkoProjectLoader: NSObject {
             } else {
                 // attempt to get the embed url from the response, throw an error if unable to
                 if let projectEmbed = data["embedUrl"] as? String {
-                    totalUrl = "\(projectEmbed)?embedapi=1.0&sharemode=proxy\(urlParam)"
+                    totalUrl = "\(projectEmbed)?embedapi=1.0&sharemode=proxy&urlsmode=proxy\(urlParam)"
                 } else {
                     throw LoadingError.malformedResponse(message: "Embed url not found - Missing embed url in response")
                 }
