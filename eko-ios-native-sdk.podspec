@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "eko-ios-native-sdk"
-  s.version      = "0.0.7"
+  s.version      = "0.0.8"
   s.summary      = "A lightweight SDK that allows for easy integration of eko videos into an ios app."
   s.description  = <<-DESC
   The eko iOS SDK allows you to seamlessly integrate the eko player into your iOS apps and play any eko video in just 2 lines of code.
