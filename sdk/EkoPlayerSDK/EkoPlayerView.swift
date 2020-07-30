@@ -237,6 +237,7 @@ enum PlayerEventError : LocalizedError {
 
     func addCover(cover: UIView.Type) {
         self.cover = cover.init(frame: self.bounds)
+        self.cover?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.addSubview(self.cover!)
     }
     

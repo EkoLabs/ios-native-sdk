@@ -24,7 +24,7 @@ enum LoadingError : LocalizedError {
 class EkoProjectLoader: NSObject {
     private var projectId: String
     private var urlParam: String = ""
-    private let projectIDEndpoint : String = "/api/v1/projects/"
+    private let projectIDEndpoint : String = "/v1/projects/"
     private var env : String = ""
     init(projectId: String, options: EkoOptions) {
         self.projectId = projectId
@@ -66,16 +66,18 @@ class EkoProjectLoader: NSObject {
     
     func buildEmbedUrl(json: NSDictionary?) throws -> String? {
         var totalUrl : String?
-        if let data = json {
+        if let response = json {
             // Check for errors and throw a request error if necessary
-            if let errorMsg = self.parseForError(json: data) {
+            if let errorMsg = self.parseForError(json: response) {
                 throw LoadingError.requestError(message: errorMsg)
             } else {
-                // attempt to get the embed url from the response, throw an error if unable to
-                if let projectEmbed = data["embedUrl"] as? String {
-                    totalUrl = "\(projectEmbed)?embedapi=1.0&sharemode=proxy&urlsmode=proxy\(urlParam)"
-                } else {
-                    throw LoadingError.malformedResponse(message: "Embed url not found - Missing embed url in response")
+                if let data = response["data"] as? [String: Any] {
+                    // attempt to get the embed url from the response, throw an error if unable to
+                    if let projectEmbed = data["embedUrl"] as? String {
+                        totalUrl = "\(projectEmbed)?embedapi=1.0&sharemode=proxy&urlsmode=proxy\(urlParam)"
+                    } else {
+                        throw LoadingError.malformedResponse(message: "Embed url not found - Missing embed url in response")
+                    }
                 }
             }
         }
@@ -84,7 +86,7 @@ class EkoProjectLoader: NSObject {
     
     func getProjectEmbedURL(completionHandler: @escaping (String, Dictionary<String, AnyObject>?) -> Swift.Void, errorHandler: @escaping (Error?) -> Swift.Void) {
         // build the url out of the endpoint and the passed in project id
-        let urlString = "https://\(env)eko.com" + projectIDEndpoint + self.projectId
+        let urlString = "https://\(env)api.eko.com" + projectIDEndpoint + self.projectId
         if let balooUrl = URL(string: urlString) {
             
             // create the request
@@ -112,9 +114,11 @@ class EkoProjectLoader: NSObject {
                         if let embedUrl = try self.buildEmbedUrl(json: convertedJsonDict) {
                             var metadata : Dictionary<String, AnyObject>? = nil
                             if let jsonDict = convertedJsonDict {
-                                if let projectMetadata = jsonDict["metadata"] as? Dictionary<String, AnyObject> {
-                                    if (!projectMetadata.isEmpty) {
-                                        metadata = projectMetadata
+                                if let data = jsonDict["data"] as? Dictionary<String, AnyObject> {
+                                    if let projectMetadata = data["metadata"] as? Dictionary<String, AnyObject> {
+                                        if (!projectMetadata.isEmpty) {
+                                            metadata = projectMetadata
+                                        }
                                     }
                                 }
                             }
